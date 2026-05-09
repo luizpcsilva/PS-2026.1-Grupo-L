@@ -1,267 +1,48 @@
+# 🚌 Frota Fácil RJ - UFRJ Analytica (PS 2026)
 
-
-# Documentação de Dados — Transporte e Dados Urbanos (Rio de Janeiro)
-
-Este documento descreve as fontes de dados utilizadas e o dicionário das bases relacionadas ao sistema de transportes (SMTR), além de fontes públicas complementares recomendadas para o desenvolvimento de soluções no contexto do hackathon.
-
-![banner](./banner.jpeg)
+**Autores:** Luiz Paulo Corrêa da Silva & João Vitor Pereira  
+**Equipe:** Grupo L  
 
 ---
 
-## Fontes de Dados
+## 📖 Panorama Geral do Projeto
 
-As bases de dados deste projeto estão organizadas em duas categorias:
+O **Frota Fácil RJ** é uma Ferramenta de Apoio à Tomada de Decisão focada em resolver um dos maiores problemas de mobilidade urbana do Rio de Janeiro: a imprevisibilidade do tempo de ciclo das linhas de ônibus devido os engarrafamentos.
 
-### Dataset Principal (Projeto)
+As concessionárias de transporte público são obrigadas contratualmente pela Prefeitura a cumprir intervalos mínimos de partida (o *headway*), estipulados via diretrizes GTFS. No entanto, o trânsito caótico afeta diretamente o tempo de ciclo de cada linha. Sem ferramentas preditivas, dimensionar a frota necessária torna-se um palpite, gerando multas, custos operacionais excessivos e longas esperas para os passageiros.
 
-O dataset principal utilizado no projeto é o conjunto de dados da Secretaria Municipal de Transportes.
+Nós ensinamos o comportamento da duração das viagens de ônibus a uma Inteligência Artificial. Cruzamos a base de GPS da Zirix com as regras da Prefeitura e criamos um modelo de **Machine Learning (Random Forest)** que prevê o **tempo de ciclo exato** de qualquer linha, em qualquer horário e dia. 
 
-**SMTR — Sistema Municipal de Transportes**
-Download consolidado:
-[https://drive.google.com/drive/folders/1HOImipCoQWywaJq-mhKt1ufxJDNq0bip?usp=sharing](https://drive.google.com/drive/folders/1HOImipCoQWywaJq-mhKt1ufxJDNq0bip?usp=sharing)
+Com a predição correta, o sistema aplica a fórmula de dimensionamento dinâmico da frota ($F = T / H$), permitindo que as empresas ajustem a quantidade de veículos nas ruas minuto a minuto.
 
-Este dataset contém dados operacionais, financeiros e estruturais do sistema de transporte público do Rio de Janeiro, sendo a base central para análise e desenvolvimento da solução.
-
----
-
----
-
-### Fontes Complementares (Hackathon)
-
-As fontes abaixo não fazem parte diretamente do dataset principal, mas são recomendadas para enriquecer análises, gerar insights e construir soluções mais robustas durante o hackathon:
-
-* Data.Rio
-  [https://www.data.rio/](https://www.data.rio/)
-  Dados urbanos diversos, incluindo mobilidade, clima, demografia e infraestrutura.
-
-* Portal de Dados Abertos do RJ
-  [https://dadosabertos.rj.gov.br/](https://dadosabertos.rj.gov.br/)
-  Base ampla de dados governamentais estaduais.
-
-* Instituto de Segurança Pública do RJ
-  [https://www.ispdados.rj.gov.br/](https://www.ispdados.rj.gov.br/)
-  Dados relacionados à criminalidade e segurança pública.
-
-* Fogo Cruzado
-  [https://api.fogocruzado.org.br/search](https://api.fogocruzado.org.br/search)
-  API com registros de eventos de violência armada.
-
-* Ministério da Saúde do Brasil
-  [https://dadosabertos.saude.gov.br/](https://dadosabertos.saude.gov.br/)
-  Dados de saúde pública, incluindo informações epidemiológicas e de infraestrutura hospitalar.
+### 🚀 Nossos Resultados
+* **Precisão (R²):** 86%
+* **Margem de Erro (MAE):** ~7 Minutos
+* O modelo converteu o caos em previsibilidade estocástica, trazendo uma otimização de frotas baseada em dados em tempo real.
 
 ---
 
+## 📂 Estrutura do Repositório (Notebooks)
 
-**Observação:**
-O desafio do hackathon possui caráter aberto, incentivando o uso combinado dessas fontes para cruzamento de dados, geração de valor e desenvolvimento de soluções inovadoras para a cidade do Rio de Janeiro.
+Para facilitar a leitura e execução, a lógica principal do projeto foi dividida em 3 arquivos Google Colab distintos. Abaixo está a função de cada um deles:
 
----
+### 1️⃣ `Coleta EDA e Processamento de_dados PS.2026 Grupo L.ipynb`
+Neste notebook, realizamos a importação das bases de dados (GTFS e Zirix), a Análise Exploratória de Dados (EDA) e a limpeza inicial. É aqui que lidamos com valores nulos, filtramos ruídos físicos (ex: remoção de outliers de velocidade fora do limite de 5 a 65 km/h) e realizamos o cruzamento de tabelas. 
 
-## Materiais de Apoio e Diretrizes do Hackathon
+### 2️⃣ `Treinamento do Modelo PS.2026 Grupo L.ipynb`
+Este notebook é dedicado exclusivamente à construção do modelo preditivo da aplicação. Utilizamos os dados previamente limpos para treinar o nosso modelo preditivo baseado em **Random Forest**. É aqui que o modelo aprende os padrões de trânsito em diferentes horários de pico e dias da semana.
 
-Para auxiliar no desenvolvimento técnico e organizacional do projeto, recomenda-se o uso dos seguintes recursos:
-
-### Materiais de Apoio
-
-* **Git e controle de versão**
-  Boas práticas de versionamento, uso de branches, commits descritivos e pull requests:
-  [https://github.com/UFRJ-Analytica/PS-2025.1/blob/main/Materiais/git.md](https://github.com/UFRJ-Analytica/PS-2025.1/blob/main/Materiais/git.md)
-
-* **Análise Exploratória de Dados (EDA)**
-  Compreensão inicial dos dados, identificação de padrões, outliers e correlações:
-  [https://github.com/UFRJ-Analytica/PS-2025.1/blob/main/Materiais/EDA.md](https://github.com/UFRJ-Analytica/PS-2025.1/blob/main/Materiais/EDA.md)
-
-
-Adicionalmente, recomenda-se a utilização de documentação técnica, mecanismos de busca, fóruns especializados (como Stack Overflow) e ferramentas baseadas em modelos de linguagem para apoio ao desenvolvimento.
+### 3️⃣ `Visualização dos dados PS.2026 Grupo L.ipynb`
+Notebook focado em demonstrar o comportamento do modelo e extrair *insights* de negócio. Nele, geramos o cálculo de dimensionamento da frota e gráficos, apresentando a variação do tamanho da frota no decorrer do dia.
 
 ---
 
-### Organização em Equipe
+## 🗄️ Acesso aos Dados
 
-Os participantes foram organizados em grupos para desenvolvimento colaborativo. É fundamental manter comunicação contínua entre os membros da equipe ao longo do projeto.
+Para executar as células dos notebooks (`.ipynb`), é necessário ter acesso às bases de dados brutos e tratadas do projeto. 
 
----
-
-### Boas Práticas de Desenvolvimento
-
-Cada grupo deve:
-
-* Clonar o repositório do projeto
-* Trabalhar com branches organizadas
-* Criar commits claros e bem descritos
-* Utilizar pull requests para integração de código
-* Manter o código limpo, estruturado e documentado
-
-Essas práticas são fundamentais para garantir qualidade, rastreabilidade e escalabilidade no desenvolvimento do projeto.
+⚠️ **Atenção:** O link direto para a pasta do Google Drive contendo os dados necessários (`DadosAnalyticaPS2026-GrupoL`) encontra-se no arquivo **`Observações.pdf`**, que foi anexado junto à entrega do projeto. Por favor, consulte este arquivo para obter o link de acesso e as instruções de mapeamento de diretório antes de rodar os Colabs.
 
 ---
 
-## Dataset Principal — SMTR
-
-O conjunto de dados da SMTR contempla informações sobre operação, planejamento, subsídios e monitoramento da frota de transporte público.
-
----
-
-## Dicionário de Dados (SMTR)
-
-Abaixo está a descrição das pastas presentes no dataset:
-
----
-
-### 1. `br_rj_riodejaneiro_recursos`
-
-**Tema:** Recursos e Apelações
-**Descrição:**
-Dados administrativos referentes a recursos interpostos por operadores do sistema de transporte, incluindo:
-
-* Bloqueios de via
-* Reprocessamento de viagens
-* Validação de serviços
-
----
-
-### 2. `br_rj_riodejaneiro_viagem_zirix`
-
-**Tema:** Registros de Viagem
-**Descrição:**
-Contém dados de viagens provenientes de sistemas de bilhetagem, incluindo:
-
-* Execução de viagens
-* Eventos operacionais
-
----
-
-### 3. `cadastro`
-
-**Tema:** Cadastros do Sistema
-**Descrição:**
-Informações cadastrais gerais, como:
-
-* Consórcios operadores
-* Estrutura organizacional do sistema
-
----
-
-### 4. `dashboard_bilhetagem_implantacao_jae`
-
-**Tema:** Monitoramento GPS
-**Descrição:**
-Dados agregados de localização de veículos por modal:
-
-* BRT
-* Ônibus (SPPO)
-* Vans (STPL)
-* VLT
-
----
-
-### 5. `dashboard_subsidio_sppo`
-
-**Tema:** Subsídios
-**Descrição:**
-Tabelas consolidadas utilizadas para acompanhamento financeiro:
-
-* Pagamentos de subsídios
-* Indicadores operacionais
-
----
-
-### 6. `gtfs`
-
-**Tema:** General Transit Feed Specification
-**Descrição:**
-Base padronizada de transporte contendo:
-
-* routes: linhas
-* stops: paradas
-* trips: viagens
-* shapes: geometria das rotas
-* calendar: operação temporal
-
----
-
-### 7. `monitoramento`
-
-**Tema:** Fiscalização
-**Descrição:**
-Registros relacionados ao controle operacional:
-
-* Multas
-* Autuações
-* Penalidades
-
----
-
-### 8. `planejamento`
-
-**Tema:** Planejamento Operacional
-**Descrição:**
-Define regras e parâmetros do sistema:
-
-* Tarifas
-* Integrações tarifárias
-* Calendário operacional
-* Ordens de serviço
-
----
-
-### 9. `projeto_subsidio_sppo`
-
-**Tema:** Dados de Subsídio (Base Bruta)
-**Descrição:**
-Dados granulares utilizados no cálculo de subsídios:
-
-* Quilometragem percorrida
-* Status de trajetos
-* Processamento de viagens
-
----
-
-### 10. `projeto_subsidio_sppo_encontro_contas`
-
-**Tema:** Auditoria Financeira (V1)
-**Descrição:**
-Relatórios financeiros contendo:
-
-* Subsídio devido
-* Receita tarifária
-
----
-
-### 11. `projeto_subsidio_sppo_encontro_contas_v2`
-
-**Tema:** Auditoria Financeira (V2)
-**Descrição:**
-Versão atualizada com:
-
-* Serviços atípicos
-* Correções operacionais
-* Receitas não tarifárias
-
----
-
-### 12. `subsidio`
-
-**Tema:** Parâmetros Financeiros
-**Descrição:**
-Define métricas utilizadas no cálculo de remuneração:
-
-* Valor por quilômetro
-* Penalidades
-* Metas operacionais
-
----
-
-### 13. `veiculo`
-
-**Tema:** Frota
-**Descrição:**
-Dados dos veículos do sistema:
-
-* Licenciamento
-* Operação diária
-* Inspeções
-* Condições operacionais
-
-
+*Projeto desenvolvido para o Processo Seletivo da UFRJ Analytica 2026.*
